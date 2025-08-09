@@ -1,148 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Happy Happyyyy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        background-color: pink;
-      }
-      .container {
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 100px;
-        height: 400px;
-        width: 300px;
-        padding: 2px;
-        position: relative;
-        border-radius: 10px;
-        overflow: hidden;
-        cursor: grabbing;
-      }
-      .back {
-        position: absolute;
-        inset: 0;
-        color: #d92c54;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: #f7f7f7;
-      }
-      .back > iframe {
-        /* Making the iframe responsive */
-        width: 100%;
-        height: 100%;
-        max-height: 358px;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Happy Happyyyy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: pink;
+      }
+      .container {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100px;
+        height: 400px;
+        width: 300px;
+        padding: 2px;
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: grabbing;
+      }
+      .back {
+        position: absolute;
+        inset: 0;
+        color: #d92c54;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+      }
+      .back > img {
+        height: 60%;
+        width: 70%;
       }
 
-      canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 10px;
-      }
+      canvas {
+        position: absolute;
 
-      .monfont {
-        font-family: "Monsieur La Doulaise", cursive;
-        font-weight: 800;
-        font-style: normal;
-        font-size: 60px;
-        margin: 1px;
-      }
-
-      body > p {
-        font-family: monospace;
-      }
-    </style>
-  </head>
-  <body>
-    <p>Scratch Card</p>
-    <div class="container">
-      <div class="back">
-        <iframe
-          src="https://assets.pinterest.com/ext/embed.html?id=583427326765988393"
-          frameborder="0"
-          scrolling="no"
-        ></iframe>
-        <h2>HAPPY BIRTHDAY</h2>
-        <p class="monfont">Jessi</p>
-      </div>
-      <canvas id="front" width="300" height="400"></canvas>
-    </div>
-    <script>
-      let canvas = document.getElementById("front");
-      let context = canvas.getContext("2d");
-      let isDragging = false;
-
-      const init = () => {
-        context.fillStyle = "rgb(88, 81, 137)";
-        context.fillRect(0, 0, 300, 400);
-      };
-
-      // Helper function to get coordinates
-      const getCoords = (event) => {
-        const rect = canvas.getBoundingClientRect();
-        if (event.touches) {
-          return {
-            x: event.touches[0].clientX - rect.left,
-            y: event.touches[0].clientY - rect.top,
-          };
-        } else {
-          return {
-            x: event.offsetX,
-            y: event.offsetY,
-          };
-        }
+        border-radius: 10px;
       }
 
-      const scratch = (x, y) => {
-        context.globalCompositeOperation = "destination-out";
-        context.beginPath();
-        context.arc(x, y, 24, 0, 2 * Math.PI);
-        context.fill();
-      };
-      
-      const start = (event) => {
+      .monfont {
+        font-family: "Monsieur La Doulaise", cursive;
+        font-weight: 800;
+        font-style: normal;
+        font-size: 60px;
+        margin: 1px;
+      }
+
+      body > p {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Scratch Card</p>
+    <div class="container">
+      <div class="back">
+        <img src="https://i.pinimg.com/736x/b5/9a/49/b59a4911be98a042d694e9bfbb29ef0f.jpg" />
+        <h2>HAPPY BIRTHDAY</h2>
+        <p class="monfont">John Doe</p>
+      </div>
+      <canvas id="front" width="300" height="400"></canvas>
+    </div>
+    <script>
+      let canvas = document.getElementById("front");
+      let context = canvas.getContext("2d");
+
+      const init = () => {
+        context.fillStyle = "rgb(88, 81, 137)";
+        context.fillRect(0, 0, 300, 400);
+      };
+
+      const scratch = (x, y) => {
+        context.globalCompositeOperation = "destination-out";
+        context.beginPath();
+        context.arc(x, y, 24, 0, 2 * Math.PI);
+        context.fill();
+      };
+
+      init();
+
+      let isDragging = false;
+
+      canvas.addEventListener("mousedown", (event) => {
         isDragging = true;
-        const { x, y } = getCoords(event);
-        scratch(x, y);
-      };
+        scratch(event.offsetX, event.offsetY);
+      });
 
-      const move = (event) => {
+      canvas.addEventListener("mousemove", (event) => {
         if (isDragging) {
-          // Prevent page scrolling on mobile
-          if (event.touches) event.preventDefault();
-          const { x, y } = getCoords(event);
-          scratch(x, y);
+          scratch(event.offsetX, event.offsetY);
         }
-      };
-      
-      const stop = () => {
+      });
+
+      canvas.addEventListener("mouseup", () => {
         isDragging = false;
-      };
+      });
 
-      // Mouse Events
-      canvas.addEventListener("mousedown", start);
-      canvas.addEventListener("mousemove", move);
-      canvas.addEventListener("mouseup", stop);
-      canvas.addEventListener("mouseleave", stop);
-      
-      // Touch Events
-      canvas.addEventListener("touchstart", start);
-      canvas.addEventListener("touchmove", move);
-      canvas.addEventListener("touchend", stop);
-      canvas.addEventListener("touchcancel", stop);
-
-      init();
-
-    </script>
-  </body>
+      canvas.addEventListener("mouseleave", () => {
+        isDragging = false;
+      });
+    </script>
+  </body>
 </html>
